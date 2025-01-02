@@ -1,0 +1,29 @@
+# setting server variable
+@server = http://localhost:3000
+
+### Send a GET request
+GET {{server}}/person
+
+### Send a POST request
+POST {{server}}/person
+Content-Type: application/json
+
+{
+  "name": "Andy Park",
+  "age": 30,
+  "email": "andy@backend.com"
+}
+
+### Check the created document
+GET {{server}}/person/andy@backend.com
+
+### Send a PUT request, update the document
+PUT {{server}}/person/andy@backend.com
+Content-Type: application/json
+
+{
+  "age": 32
+}
+
+### Delete the document
+DELETE {{server}}/person/andy@backend.com
