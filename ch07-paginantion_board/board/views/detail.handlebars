@@ -1,0 +1,150 @@
+<h1>{{title}}</h1>
+{{#with post}}
+{{!-- title --}}
+<h2 class="text-xl">{{title}}</h2>
+<div>
+    {{!-- writer name --}}
+    Writer: <b>{{writer}}</b>
+</div>
+<div>
+    {{!-- views and date --}}
+    Views: {{hits}} | Date: {{dateString createdDt}}
+    <button onclick="modifyPost()">Modify</button>
+    <button onclick="deletePost()">Delete</button>
+</div>
+<div>
+    {{!-- content --}}
+    <pre>{{content}}</pre>
+</div>
+
+<section>
+    <div>
+        <h3>There are {{lengthOfList comments}} comments</h3>
+    </div>
+
+    {{!-- write comment --}}
+    <form method="post" action="/write-comment">
+        <input type="hidden" name="id" value="{{_id}}" />
+        <div>
+            <div>
+                <input type="text" name="name" placeholder="name" />
+                <input type="password" name="password" placeholder="password" />
+            </div>
+            <div>
+                <textarea cols="40" rows="3" name="comment" placeholder="Enter a comment" ></textarea>
+
+                {{!-- save comment button --}}
+                <br /><br /><button type="submit">Save</button>
+            </div>
+        </div>
+    </form>        
+</section>
+
+
+{{!-- comments --}}
+<section>
+    {{#each comments}}
+    <div>
+        <div>
+            Writer: <b>{{name}}</b>
+        </div>
+        <div>
+            Date: {{dateString createdDt}}
+            <button onclick="deleteComment('{{idx}}')">Delete</button>
+        </div>
+    </div>
+    <div>
+        <pre>{{comment}}</pre>
+    </div>
+    {{/each}}
+</section>
+{{/with}}
+
+<footer>
+    <div>
+        <a href="/">Home</a>
+    </div>
+</footer>
+
+<script>
+    const postOption = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+
+    async function modifyPost() {
+        const password = prompt('Enter the password');
+        if (!password) {
+            return;
+        }
+
+        // check password
+        const result = await fetch('/check-password', {
+            ...postOption,
+            body: JSON.stringify({ id: "{{post._id}}", password }),
+        });
+
+        const data = await result.json();
+
+        if (data.isExist) {
+            // move to modify page
+            document.location = `/modify/{{post._id}}`;
+        } else {
+            alert('Password is incorrect');
+        }
+    }
+
+    const deleteOption = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+
+    async function deletePost() {
+        const password = prompt('If you want to delete, enter the password');
+
+        if (!password) {
+            return;
+        }
+
+        const restult = await fetch('/delete', {
+            ...deleteOption,
+            body: JSON.stringify({ id: "{{post._id}}", password }),
+        });
+
+        const data = await restult.json();
+        if (!data.isSuccess) {
+            alert('Delete is failed. Password is incorrect');
+            return;
+        } else {
+            document.location = '/';
+        }
+    }
+
+    async function deleteComment(idx) {
+        const password = prompt('If you want to delete, enter the password');
+
+        if (!password) {
+            return;
+        }
+
+        // /delete-comment API
+        const restult = await fetch('/delete-comment', {
+            ...deleteOption,
+            body: JSON.stringify({ id: "{{post._id}}", idx, password }),
+        });
+
+        const data = await restult.json();
+        if (!data.isSuccess) {
+            alert('Delete is failed. Password is incorrect');
+            return;
+        } 
+
+        // refresh
+        alert('Delete is success');
+        document.location.reload();
+    }
+</script>
