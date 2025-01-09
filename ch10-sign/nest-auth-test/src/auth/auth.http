@@ -1,0 +1,51 @@
+### Create a user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email" : "andy1@podo.com",
+    "password" : "1234",
+    "username" : "andy"
+}
+
+### Sign-in
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email" : "andy@podo.com",
+    "password" : "1234"
+}
+
+### Sign-in 2 : LoginGuard
+POST http://localhost:3000/auth/login2
+Content-Type: application/json
+
+{
+    "email" : "andy1@podo.com",
+    "password" : "1234"
+}
+
+### Guard Test
+GET http://localhost:3000/auth/test-guard
+
+### Sign-in 3 : test - using session
+POST http://localhost:3000/auth/login3
+Content-Type: application/json
+
+{
+    "email" : "andy1@podo.com",
+    "password" : "1234"
+}
+
+### Sign-in 3 : test - wrong password
+POST http://localhost:3000/auth/login3
+Content-Type: application/json
+
+{
+    "email" : "andy1@podo.com",
+    "password" : "12345"
+}
+
+### Test if authentication succeeds
+GET http://localhost:3000/auth/test-guard2
