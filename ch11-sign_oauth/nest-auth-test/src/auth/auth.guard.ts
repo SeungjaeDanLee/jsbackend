@@ -43,11 +43,18 @@ export class LoginGuard implements CanActivate {
 // AuthGaurd inheritance
 export class LocalAuthGuard extends AuthGuard('local') {
     async canActivate(context: any): Promise<boolean> {
+        console.log('guard before canActivate');
         const result = (await super.canActivate(context)) as boolean;
+        console.log('result : ' + result);
+        console.log('guard after canActivate');
         // Run local storage
         const request = context.switchToHttp().getRequest();
+        
+        console.log(request.session);
         // Save session
         await super.logIn(request);
+        console.log(request.session);
+
         return request;
     }
 }
@@ -55,8 +62,26 @@ export class LocalAuthGuard extends AuthGuard('local') {
 @Injectable()
 export class AuthenticatedGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
+        console.log('333');
         const request = context.switchToHttp().getRequest();
         // Verify authentication by reading information from the session
         return request.isAuthenticated();
+    }
+}
+
+@Injectable()
+// Using google strategy
+export class GoogleAuthGuard extends AuthGuard('google') {
+    async canActivate(context: any): Promise<boolean> {
+        // Using method of parent's class
+        const result = (await super.canActivate(context)) as boolean;
+
+        // Get a request object from context
+        const request = context.switchToHttp().getRequest();
+
+        // Apply session
+        await super.logIn(request);
+        
+        return result;
     }
 }
