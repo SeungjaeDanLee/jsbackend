@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Nest Chat</title>
+</head>
+<body>
+    <h2>Simple Nest Chat</h2>
+
+    <!-- ChatRoom List -->
+    <div>
+        <h2>ChatRoom List</h2>
+        <ul id="rooms"></ul>
+    </div>
+
+    <!-- Text input area -->
+    <input type="text" id="message" placeholder="Please enter your message."/>
+    
+    <!-- [Send] button -->
+    <button onclick="sendMessage()">Send</button>
+    
+    <!-- [Create Room] button -->
+    <button onclick="createRoom()">Create Room</button>
+
+    <!-- Add notice area -->
+    <div>
+        <h2>Notice</h2>
+        <div id="notice"></div>
+    </div>
+
+    <div>
+        <h2>Chat</h2>
+        <!-- Chatting area -->
+        <div id="chat"></div>
+    </div>
+    
+    <!-- jquery load -->
+    <script src="https://code.jquery.com/jquery-3.6.1.slim.js"></script>
+    <!-- create socket.io instance -->
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <!-- javascript file Division -->
+    <script src="http://localhost:3000/script.js"></script>
+</body>
+</html>

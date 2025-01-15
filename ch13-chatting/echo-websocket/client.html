@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .message {
+            width: 300px; color: #fff; background-color: purple; margin-top: 5px; padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Textarea to write a message -->
+    <textarea id="message" cols="50" rows="5"></textarea>
+    <br />
+
+    <!-- Button -->
+     <button onclick="sendMessage()">Send</button>
+     <button onclick="webSocketClose()">Close</button>
+     <div id="messages"></div>
+</body>
+
+<script>
+    // WebSocket connnection
+    const ws = new WebSocket('ws://localhost:3000');
+
+    // Send a message to use sendMessage()
+    function sendMessage() {
+        ws.send(document.getElementById('message').value);
+    }
+
+    // WebSocket disconnnection
+    function webSocketClose() {
+        console.log("Push Close");
+        ws.close();
+    }
+
+    // Open event handler of WebSocket
+    ws.onopen = function() {
+        console.log(" Client connection completed!");
+    }
+
+    // message evnet handler of WebSocket.
+    // Executed when a message is received from the server.
+    ws.onmessage = function(event) {
+        // Change the Enter key to <br /> tag.
+        let message = event.data.replace(/(\r\n|\n|\r)/g, "<br />");
+        // Create div tag.
+        let el = document.createElement('div');
+        // <div>{message}</div> Becomes a value. Parse into HTML.
+        el.innerHTML = message;
+        // <div class='message'>{message}</div> Becomes a value.
+        el.className = 'message';
+        // Add to messages element.
+        document.getElementById('messages').append(el);
+    }
+
+    // Executed when disconnection
+    ws.onclose = function(e) {
+        console.log('close');
+        document.getElementById('messages').append("Server disconnection");
+    }
+</script>
+</html>
